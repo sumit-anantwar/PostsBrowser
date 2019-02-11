@@ -1,0 +1,28 @@
+apply plugin: 'kotlin'
+
+dependencies {
+    def dependency = rootProject.ext.dependency
+
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(':data')
+
+
+    // Kotlin
+    implementation dependency.kotlin
+
+    // Retrofit
+    implementation dependency.retrofit
+    implementation dependency.retrofitAdapter
+    implementation dependency.retrofitConverter
+    implementation dependency.okHttpAndroid
+    implementation dependency.okHttpLogger
+    implementation dependency.javaxAnnotation
+    implementation dependency.javaxInject
+
+    // Tests
+    testImplementation dependency.junit
+    testImplementation dependency.mockitoKotlin
+}
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8

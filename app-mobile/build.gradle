@@ -1,0 +1,113 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'io.fabric'
+
+
+// Fabric
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
+
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+    mavenCentral()
+}
+
+
+
+android {
+    def buildConfig = rootProject.ext.build_config
+
+    compileSdkVersion buildConfig.compileSdkVersion
+    defaultConfig {
+        applicationId buildConfig.package
+        minSdkVersion buildConfig.minSdkVersion
+        targetSdkVersion buildConfig.targetSdkVersion
+        versionCode versionCode
+        versionName versionName
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+
+dependencies {
+    def dependency = rootProject.ext.dependency
+
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(':mvp')
+    implementation project(':network')
+    implementation project(':data')
+    implementation project(':datastore')
+
+
+    // Kotlin
+    implementation dependency.kotlin
+
+    // Support
+    implementation dependency.appCompatV7
+    implementation dependency.supportDesign
+    implementation dependency.constraintLayout
+
+    // RxJava
+    implementation dependency.rxAndroid
+    implementation dependency.rxKotlin
+    implementation dependency.rxBindings
+
+    // Timber
+    implementation dependency.timber
+
+    // ButterKnife
+    implementation dependency.butterKnife
+    kapt dependency.butterKnifeCompiler
+
+    implementation dependency.gson
+
+    // Conductor
+    implementation dependency.conductor
+    implementation dependency.conductorLifecycle
+    implementation dependency.conductorAutoDispose
+
+    // Glide
+    implementation dependency.glide
+    kapt dependency.glideCompiler
+
+    // Stetho
+    implementation dependency.stetho
+    implementation dependency.okHttpStetho
+
+    // Dagger
+    implementation dependency.dagger
+    kapt dependency.daggerCompiler
+    implementation dependency.daggerAndroid
+    kapt dependency.daggerProcessor
+    compileOnly dependency.javaxAnnotation
+
+
+    // Tests
+    testImplementation dependency.junit
+    testImplementation dependency.mockitoKotlin
+    androidTestImplementation dependency.testRunner
+    androidTestImplementation dependency.espressoCore
+
+    // Crashlytics
+    implementation('com.crashlytics.sdk.android:crashlytics:2.8.0@aar') {
+        transitive = true;
+    }
+}
