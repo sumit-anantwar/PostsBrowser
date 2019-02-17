@@ -9,6 +9,7 @@ object PostsListContract {
     interface View : MvpViewInterface {
 
         fun onFetchPosts(posts: List<Post>)
+        fun onError(error: Throwable)
     }
 
     interface Presenter : MvpPresenterInterface<View> {

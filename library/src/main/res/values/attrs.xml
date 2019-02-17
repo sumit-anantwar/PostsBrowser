@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="cr_radius" format="dimension"/>
+
+    <declare-styleable name="RoundedEditText">
+        <attr name="corner_radius"/>
+    </declare-styleable>
+
+</resources>

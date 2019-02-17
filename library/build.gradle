@@ -1,13 +1,9 @@
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
-apply plugin: 'realm-android'
 
 android {
     def buildConfig = rootProject.ext.build_config
 
     compileSdkVersion buildConfig.compileSdkVersion
-
     defaultConfig {
         minSdkVersion buildConfig.minSdkVersion
         targetSdkVersion buildConfig.targetSdkVersion
@@ -31,14 +27,6 @@ dependencies {
     def dependency = rootProject.ext.dependency
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(':data')
 
-
-    implementation dependency.kotlin
-    implementation dependency.rxAndroid
-    implementation dependency.javaxInject
-
-    testImplementation dependency.junit
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    implementation dependency.appCompatV7
 }

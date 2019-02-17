@@ -36,7 +36,7 @@ class PostsListPresenter(
 
             }, {
 
-                Timber.d(it.localizedMessage)
+                view?.onError(it)
             }).addTo(bag)
     }
 }
