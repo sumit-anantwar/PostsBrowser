@@ -1,11 +1,11 @@
 package com.sumitanantwar.postsbrowser.mobile.ui.activities.postslist
 
 import com.sumitanantwar.mvp.MvpPresenter
-import com.sumitanantwar.postsbrowser.data.PostsRepository
+
 import com.sumitanantwar.postsbrowser.data.scheduler.SchedulerProvider
+import com.sumitanantwar.postsbrowser.data.repository.PostsRepository
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
-import timber.log.Timber
 
 class PostsListPresenter(
     private val postsRepository: PostsRepository,

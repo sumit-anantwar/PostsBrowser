@@ -8,21 +8,17 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
 import butterknife.BindView
 import butterknife.OnClick
-import com.sumitanantwar.postsbrowser.data.store.NetworkDataStore
 import com.sumitanantwar.postsbrowser.mobile.R
 import com.sumitanantwar.mvp.MvpController
-import com.sumitanantwar.postsbrowser.data.PostsRepository
 import com.sumitanantwar.postsbrowser.data.model.Post
 import com.sumitanantwar.postsbrowser.data.scheduler.SchedulerProvider
+import com.sumitanantwar.postsbrowser.data.repository.PostsRepository
 import timber.log.Timber
 import javax.inject.Inject
 
-class PostsListController @Inject constructor(
-
-) : MvpController<PostsListContract.View, PostsListContract.Presenter>(),
+class PostsListController @Inject constructor() : MvpController<PostsListContract.View, PostsListContract.Presenter>(),
     PostsListContract.View {
 
     //======= ButterKnife Binders =======

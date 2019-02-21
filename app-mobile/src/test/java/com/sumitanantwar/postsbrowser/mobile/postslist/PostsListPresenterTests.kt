@@ -1,10 +1,11 @@
 package com.sumitanantwar.postsbrowser.mobile.postslist
 
 import com.nhaarman.mockitokotlin2.*
-import com.sumitanantwar.postsbrowser.data.PostsRepository
+import com.sumitanantwar.postsbrowser.data.PostsRepositoryImpl
 import com.sumitanantwar.postsbrowser.data.store.DataStoreFactory
 import com.sumitanantwar.postsbrowser.data.store.NetworkDataStore
 import com.sumitanantwar.postsbrowser.data.store.PostsDataStore
+import com.sumitanantwar.postsbrowser.data.repository.PostsRepository
 import com.sumitanantwar.postsbrowser.datastore.PostsDataStoreImpl
 import com.sumitanantwar.postsbrowser.mobile.scheduler.ImmediateSchedulerProvider
 import com.sumitanantwar.postsbrowser.mobile.testdata.TestDataFactory
@@ -19,7 +20,6 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.hamcrest.CoreMatchers.`is` as _is
-
 
 
 class PostsListPresenterTests {
@@ -39,7 +39,7 @@ class PostsListPresenterTests {
     private val schedulerProvider = ImmediateSchedulerProvider()
 
     // SUT
-    private lateinit var PostsListPresenter_SUT : PostsListPresenter
+    private lateinit var PostsListPresenter_SUT: PostsListPresenter
 
     @Before
     fun setup() {
@@ -55,11 +55,11 @@ class PostsListPresenterTests {
 
         dataStoreFactory = DataStoreFactory(postDataStore, networkDataStore)
 
-        postsRepository = PostsRepository(dataStoreFactory)
+        postsRepository = PostsRepositoryImpl(dataStoreFactory)
     }
 
     @After
-    fun tearDown(){
+    fun tearDown() {
 
     }
 
@@ -77,8 +77,8 @@ class PostsListPresenterTests {
         verify(mockNetworkService, times(1)).fetchPosts()
         verify(mockView, times(1)).onFetchPosts(check {
             assertThat(it.count(), _is(10))
-            assertThat(it.first().id, _is(1) )
-            assertThat(it.last().id, _is(10) )
+            assertThat(it.first().id, _is(1))
+            assertThat(it.last().id, _is(10))
         })
 
     }
