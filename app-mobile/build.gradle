@@ -32,7 +32,7 @@ android {
         targetSdkVersion buildConfig.targetSdkVersion
         versionCode versionCode
         versionName versionName
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.sumitanantwar.postsbrowser.mobile.testapp.TestRunner"
     }
     buildTypes {
         release {
@@ -104,8 +104,34 @@ dependencies {
     // Tests
     testImplementation dependency.junit
     testImplementation dependency.mockitoKotlin
-    androidTestImplementation dependency.testRunner
-    androidTestImplementation dependency.espressoCore
+
+    androidTestImplementation dependency.junit
+    androidTestImplementation dependency.mockitoAndroid
+    androidTestImplementation dependency.mockitoKotlin
+    androidTestImplementation (dependency.testRunner) {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+    androidTestImplementation (dependency.testRules) {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+    androidTestImplementation (dependency.espressoCore) {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+    androidTestImplementation (dependency.espressoIntents) {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+    androidTestImplementation (dependency.espressoContrib) {
+        exclude module: 'appcompat'
+        exclude module: 'appcompat-v7'
+        exclude module: 'support-v4'
+        exclude module: 'support-v13'
+        exclude module: 'support-annotations'
+        exclude module: 'recyclerview-v7'
+        exclude module: 'design'
+    }
+
+    kaptTest dependency.daggerCompiler
+    kaptAndroidTest dependency.daggerCompiler
 
     // Crashlytics
     implementation('com.crashlytics.sdk.android:crashlytics:2.8.0@aar') {

@@ -5,7 +5,8 @@ import com.google.gson.reflect.TypeToken
 import com.sumitanantwar.postsbrowser.network.model.PostModel
 import java.nio.charset.Charset
 
-class TestDataFactory {
+internal class TestDataFactory {
+
 
     private val postsModelList: List<PostModel> by lazy {
         val classLoader = javaClass.classLoader

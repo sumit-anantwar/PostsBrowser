@@ -5,7 +5,6 @@ import com.facebook.stetho.okhttp3.BuildConfig
 import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.sumitanantwar.postsbrowser.data.store.NetworkDataStore
 import com.sumitanantwar.postsbrowser.network.NetworkDataStoreImpl
-import com.sumitanantwar.postsbrowser.network.mapper.PostsModelMapper
 import com.sumitanantwar.postsbrowser.network.service.NetworkService
 import com.sumitanantwar.postsbrowser.network.service.NetworkServiceFactory
 import dagger.Binds

@@ -24,6 +24,7 @@ class App : Application(), HasActivityInjector {
         return androidInjector
     }
 
+
     //======= Static Accessor =======
     companion object {
         fun get(activity: Activity) : App {
@@ -32,14 +33,20 @@ class App : Application(), HasActivityInjector {
     }
 
 
+    // ======= Dagger AppComponent =======
+    private val component by lazy {
+        DaggerAppComponent.builder()
+            .application(this)
+            .build()
+    }
+
+
     // ======= Application Lifecycle =======
     override fun onCreate() {
         super.onCreate()
 
-        DaggerAppComponent.builder()
-            .applicatopm(this)
-            .build()
-            .inject(this)
+        // Inject the Application
+        component.inject(this)
 
 
         // Initialize Crashlytics
@@ -54,6 +61,11 @@ class App : Application(), HasActivityInjector {
 
         // Plant a Timber Debug Tree
         Timber.plant(Timber.DebugTree())
+    }
+
+    // ======= App Component =======
+    fun component() : AppComponent {
+        return component
     }
 
 }
