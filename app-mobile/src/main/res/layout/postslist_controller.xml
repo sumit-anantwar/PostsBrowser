@@ -26,6 +26,7 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <RelativeLayout
+            android:id="@+id/filter_container"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -34,9 +35,10 @@
                 android:id="@+id/layout_filter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="-150dp"
                 android:layout_below="@id/filter_bar"
                 android:background="@color/colorAccent"
-                android:visibility="visible">
+                android:visibility="invisible">
 
                 <TextView
                     android:id="@+id/text_label_userid"
@@ -110,7 +112,6 @@
                     app:layout_constraintTop_toTopOf="@+id/text_label_body"
                     app:layout_constraintBottom_toBottomOf="@+id/text_label_body"
                     app:layout_constraintEnd_toEndOf="@+id/edit_text_title"/>
-
 
             </android.support.constraint.ConstraintLayout>
 

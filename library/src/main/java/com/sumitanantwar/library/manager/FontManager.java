@@ -1,4 +1,4 @@
-package com.sumitanantwar.library.managers;
+package com.sumitanantwar.library.manager;
 
 import android.content.Context;
 import android.graphics.Typeface;
