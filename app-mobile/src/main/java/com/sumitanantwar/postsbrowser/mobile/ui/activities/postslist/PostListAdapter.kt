@@ -1,5 +1,6 @@
 package com.sumitanantwar.postsbrowser.mobile.ui.activities.postslist
 
+import android.graphics.Color
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -30,6 +31,13 @@ class PostListAdapter @Inject constructor() : RecyclerView.Adapter<PostListAdapt
         holder.postId.text  = post.id.toString()
         holder.title.text   = post.title
         holder.userId.text  = post.userId.toString()
+
+        var color = holder.itemView.resources.getColor(R.color.cell_odd)
+        if (position %2 == 0) {
+            color = holder.itemView.resources.getColor(R.color.cell_even)
+        }
+
+        holder.itemView.setBackgroundColor(color)
     }
 
 
