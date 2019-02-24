@@ -5,7 +5,8 @@ import com.google.gson.reflect.TypeToken
 import com.sumitanantwar.postsbrowser.network.model.PostModel
 import java.nio.charset.Charset
 
-class TestDataFactory {
+internal class TestDataFactory {
+
 
     private val postsModelList: List<PostModel> by lazy {
         val classLoader = javaClass.classLoader
@@ -24,6 +25,15 @@ class TestDataFactory {
     }
 
     fun getPostModelList() : List<PostModel> = postsModelList
+
+    fun getFilteredPostModelList(userId: Int) : List<PostModel> {
+
+        val filteredList = postsModelList.filter { post ->
+            (post.userId == userId)
+        }
+
+        return filteredList
+    }
 
     fun getRandomPostModel() : PostModel {
 

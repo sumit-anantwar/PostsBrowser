@@ -12,9 +12,5 @@ abstract class DataStoreModule {
 
     @Binds
     @AppScope
-    abstract fun bindsUiSchedulerProvider(regularSchedulerProvider: RegularSchedulerProvider): SchedulerProvider
-
-    @Binds
-    @AppScope
-    abstract fun providesPosatsDataStore(postsDataStore: PostsDataStoreImpl): PostsDataStore
+    abstract fun providesPostsDataStore(postsDataStore: PostsDataStoreImpl): PostsDataStore
 }

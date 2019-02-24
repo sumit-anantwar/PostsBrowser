@@ -1,11 +1,11 @@
 package com.sumitanantwar.postsbrowser.mobile.ui.activities.postslist
 
 import com.sumitanantwar.mvp.MvpPresenter
-import com.sumitanantwar.postsbrowser.data.PostsRepository
+
 import com.sumitanantwar.postsbrowser.data.scheduler.SchedulerProvider
+import com.sumitanantwar.postsbrowser.data.repository.PostsRepository
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
-import timber.log.Timber
 
 class PostsListPresenter(
     private val postsRepository: PostsRepository,
@@ -26,8 +26,10 @@ class PostsListPresenter(
     }
 
     //======= PostsListContract.Presenter =======
-    override fun fetchPosts() {
-        postsRepository.fetchAllPosts()
+
+    override fun fetchPostsWithFilter(userId: String, title: String, body: String) {
+
+        postsRepository.fetchPostsWithFilter(userId, title, body)
             .subscribeOn(schedulerProvider.io())
             .observeOn(schedulerProvider.ui())
             .subscribe({
@@ -36,7 +38,8 @@ class PostsListPresenter(
 
             }, {
 
-                Timber.d(it.localizedMessage)
+                view?.onError(it)
+
             }).addTo(bag)
     }
 }

@@ -3,4 +3,10 @@
 
 
     <string name="cd_logo_image">Logo Image</string>
+
+    <string name="label_filter">Filter</string>
+    <string name="label_userid">User Id</string>
+    <string name="label_title">Title</string>
+    <string name="label_body">Body</string>
+
 </resources>

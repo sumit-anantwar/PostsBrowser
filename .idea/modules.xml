@@ -6,6 +6,7 @@
       <module fileurl="file://$PROJECT_DIR$/app-mobile/app-mobile.iml" filepath="$PROJECT_DIR$/app-mobile/app-mobile.iml" />
       <module fileurl="file://$PROJECT_DIR$/data/data.iml" filepath="$PROJECT_DIR$/data/data.iml" />
       <module fileurl="file://$PROJECT_DIR$/datastore/datastore.iml" filepath="$PROJECT_DIR$/datastore/datastore.iml" />
+      <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
       <module fileurl="file://$PROJECT_DIR$/mvp/mvp.iml" filepath="$PROJECT_DIR$/mvp/mvp.iml" />
       <module fileurl="file://$PROJECT_DIR$/network/network.iml" filepath="$PROJECT_DIR$/network/network.iml" />
     </modules>
