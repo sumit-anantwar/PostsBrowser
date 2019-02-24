@@ -26,6 +26,15 @@ internal class TestDataFactory {
 
     fun getPostModelList() : List<PostModel> = postsModelList
 
+    fun getFilteredPostModelList(userId: Int) : List<PostModel> {
+
+        val filteredList = postsModelList.filter { post ->
+            (post.userId == userId)
+        }
+
+        return filteredList
+    }
+
     fun getRandomPostModel() : PostModel {
 
         val rndIndex = (0..postsModelList.count()-1).random()

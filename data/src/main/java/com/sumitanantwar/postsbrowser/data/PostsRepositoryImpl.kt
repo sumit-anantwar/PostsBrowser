@@ -12,15 +12,14 @@ class PostsRepositoryImpl @Inject constructor(
 ) : PostsRepository {
 
     /**
-     * Fetch Posts from Remote
+     * Fetch posts filtered using [userId], [title] and [body]
      */
-    override fun fetchAllPosts() : Observable<List<Post>> {
+    override fun fetchPostsWithFilter(userId: String, title: String, body: String): Observable<List<Post>> {
 
         return dataStoreFactory.getNetworkDataStore()
-            .fetchAllPosts()
+            .fetchPostsWithFilter(userId, title, body)
             .toObservable()
             .distinctUntilChanged()
-
     }
 
 

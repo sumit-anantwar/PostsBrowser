@@ -4,6 +4,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.sumitanantwar.postsbrowser.data.scheduler.SchedulerProvider
 import com.sumitanantwar.postsbrowser.data.repository.PostsRepository
 import com.sumitanantwar.postsbrowser.mobile.scheduler.ImmediateSchedulerProvider
+import com.sumitanantwar.postsbrowser.mobile.scheduler.RegularSchedulerProvider
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -14,7 +15,7 @@ object TestDataModule {
     @Provides
     @JvmStatic
     fun bindsUiSchedulerProvider(): SchedulerProvider {
-        return ImmediateSchedulerProvider()
+        return RegularSchedulerProvider()
     }
 
     @Provides

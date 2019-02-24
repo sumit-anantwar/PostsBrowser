@@ -26,8 +26,10 @@ class PostsListPresenter(
     }
 
     //======= PostsListContract.Presenter =======
-    override fun fetchPosts() {
-        postsRepository.fetchAllPosts()
+
+    override fun fetchPostsWithFilter(userId: String, title: String, body: String) {
+
+        postsRepository.fetchPostsWithFilter(userId, title, body)
             .subscribeOn(schedulerProvider.io())
             .observeOn(schedulerProvider.ui())
             .subscribe({
@@ -37,6 +39,7 @@ class PostsListPresenter(
             }, {
 
                 view?.onError(it)
+
             }).addTo(bag)
     }
 }

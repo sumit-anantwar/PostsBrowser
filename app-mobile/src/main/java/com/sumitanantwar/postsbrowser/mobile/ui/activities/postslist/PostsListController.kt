@@ -6,22 +6,27 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.support.v4.content.ContextCompat
 import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
+import android.support.v7.widget.*
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import butterknife.BindView
 import butterknife.OnClick
+import com.facebook.stetho.common.StringUtil
+import com.jakewharton.rxbinding2.widget.RxTextView
 import com.sumitanantwar.library.animator.HeightProperty
 import com.sumitanantwar.mvp.MvpController
 import com.sumitanantwar.postsbrowser.data.model.Post
 import com.sumitanantwar.postsbrowser.data.repository.PostsRepository
 import com.sumitanantwar.postsbrowser.data.scheduler.SchedulerProvider
 import com.sumitanantwar.postsbrowser.mobile.R
+import io.reactivex.Observable
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.Observables
+import io.reactivex.rxkotlin.addTo
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class PostsListController @Inject constructor() : MvpController<PostsListContract.View, PostsListContract.Presenter>(),
@@ -40,6 +45,15 @@ class PostsListController @Inject constructor() : MvpController<PostsListContrac
 
     @BindView(R.id.layout_filter)
     lateinit var filterPanel: ViewGroup
+
+    @BindView(R.id.edit_text_userid)
+    lateinit var editTextUserId: EditText
+
+    @BindView(R.id.edit_text_title)
+    lateinit var editTextTitle: EditText
+
+    @BindView(R.id.edit_text_body)
+    lateinit var editTextBody: EditText
 
     @BindView(R.id.recycler_posts)
     lateinit var postsRecyclerView: RecyclerView
@@ -60,6 +74,7 @@ class PostsListController @Inject constructor() : MvpController<PostsListContrac
     override lateinit var presenter: PostsListPresenter
     override val layoutId: Int = R.layout.postslist_controller
 
+    private val bag = CompositeDisposable()
 
     //======= Controller Lifecycle =======
     override fun onViewBound(view: View) {
@@ -79,8 +94,8 @@ class PostsListController @Inject constructor() : MvpController<PostsListContrac
         dividerDecoration.setDrawable(ContextCompat.getDrawable(this.applicationContext!!, R.drawable.divider_shape)!!)
         postsRecyclerView.addItemDecoration(dividerDecoration)
 
-        // Fetch Posts
-        fetchPosts()
+        // Setup Edit Text Observables
+        rxSetup()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup): View {
@@ -88,6 +103,7 @@ class PostsListController @Inject constructor() : MvpController<PostsListContrac
     }
 
     override fun onDestroyView(view: View) {
+        bag.dispose()
         super.onDestroyView(view)
     }
 
@@ -100,10 +116,49 @@ class PostsListController @Inject constructor() : MvpController<PostsListContrac
 
 
     //======= Private =======
-    private fun fetchPosts() {
-        swipeRefreshLayout.isRefreshing = true
-        presenter.fetchPosts()
+
+    private fun rxSetup() {
+
+        val userIdObservable = RxTextView.textChanges(editTextUserId)
+            .map { it.toString() }
+            .distinctUntilChanged()
+
+        val titleObservable = RxTextView.textChanges(editTextTitle)
+            .map { it.toString() }
+            .distinctUntilChanged()
+
+        val bodyObservable = RxTextView.textChanges(editTextBody)
+            .map { it.toString() }
+            .distinctUntilChanged()
+
+        Observables.combineLatest(userIdObservable, titleObservable, bodyObservable)
+            .debounce (300, TimeUnit.MILLISECONDS)
+            .observeOn(schedulerProvider.ui())
+            .subscribe {
+                val userId  = it.first
+                val title   = it.second
+                val body    = it.third
+
+                fetchPostsWithFilter(userId, title, body)
+
+            }.addTo(bag)
+
     }
+
+    private fun fetchPosts() {
+
+        val userId  = editTextUserId.text.toString()
+        val title   = editTextTitle.text.toString()
+        val body    = editTextBody.text.toString()
+
+        presenter.fetchPostsWithFilter(userId, title, body)
+    }
+
+    private fun fetchPostsWithFilter(userId: String, title: String, body: String) {
+        swipeRefreshLayout.isRefreshing = true
+        presenter.fetchPostsWithFilter(userId, title, body)
+    }
+
 
     /** Toggles the Visibility of the Filter Panel */
     private fun toggleFilterPanelVisibility() {
@@ -133,7 +188,7 @@ class PostsListController @Inject constructor() : MvpController<PostsListContrac
 
         // Create an animator set and play the animations together
         AnimatorSet().apply {
-            duration = 3000
+            duration = 300
 
             playTogether(
                 ObjectAnimator.ofFloat(filterPanel, "y", filterPanelY),

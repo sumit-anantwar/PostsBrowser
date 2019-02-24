@@ -5,6 +5,7 @@ import com.sumitanantwar.postsbrowser.data.store.NetworkDataStore
 import com.sumitanantwar.postsbrowser.network.mapper.PostsModelMapper
 import com.sumitanantwar.postsbrowser.network.service.NetworkService
 import io.reactivex.Flowable
+import io.reactivex.Observable
 import javax.inject.Inject
 
 class NetworkDataStoreImpl @Inject constructor(
@@ -20,4 +21,22 @@ class NetworkDataStoreImpl @Inject constructor(
                 }
             }
     }
+
+    override fun fetchPostsWithFilter(userId: String, title: String, body: String): Flowable<List<Post>> {
+        val uid = userId.toIntOrNull()
+        if (uid == null) {
+            return fetchAllPosts()
+        }
+
+        return networkService.fetchPostsWithFilter(uid)
+            .map {
+                it.map {
+                    postModelMapper.mapFromModel(it)
+                }.filter {
+                    it.title.contains(title) &&
+                            it.body.contains(body)
+                }
+            }
+    }
+
 }

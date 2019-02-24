@@ -14,7 +14,7 @@ object PostsListContract {
 
     interface Presenter : MvpPresenterInterface<View> {
 
-        fun fetchPosts()
+        fun fetchPostsWithFilter(userId: String, title: String, body: String)
     }
 
 }

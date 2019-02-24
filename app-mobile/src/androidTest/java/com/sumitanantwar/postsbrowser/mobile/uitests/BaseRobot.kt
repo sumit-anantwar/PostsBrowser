@@ -13,11 +13,20 @@ import android.support.test.espresso.matcher.ViewMatchers
 import android.support.test.espresso.matcher.ViewMatchers.withText
 import android.support.test.rule.ActivityTestRule
 import org.hamcrest.Matchers
+import kotlin.reflect.KClass
+import kotlin.reflect.KClassifier
 
-open class BaseRobot {
+/** Makes a non-launching [ActivityTestRule]
+ * so that we can stub network responses before launching the activity  */
+inline fun <reified T: Activity> makeActivityTestRule() : ActivityTestRule<T> {
+    return ActivityTestRule(T::class.java, false, false)
+}
 
-    fun <A : Activity> launchActivity(rule: ActivityTestRule<A>, startIntent: Intent? = null) {
-        rule.launchActivity(startIntent)
+open class BaseRobot<A: Activity>(val activityTestRule: ActivityTestRule<A>) {
+
+    /** Launch the [Activity] as defined by the [ActivityTestRule]*/
+    fun launchActivity(startIntent: Intent? = null) {
+        activityTestRule.launchActivity(startIntent)
     }
 
     fun editText_Replace(resId: Int, text: String): ViewInteraction =

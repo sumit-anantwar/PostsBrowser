@@ -4,6 +4,6 @@ import com.sumitanantwar.postsbrowser.data.model.Post
 import io.reactivex.Observable
 
 interface PostsRepository {
-    fun fetchAllPosts() : Observable<List<Post>>
+    fun fetchPostsWithFilter(userId: String, title: String, body: String) : Observable<List<Post>>
     fun getFavoritePosts() : Observable<List<Post>>
 }

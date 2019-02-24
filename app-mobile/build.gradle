@@ -108,6 +108,7 @@ dependencies {
     androidTestImplementation dependency.junit
     androidTestImplementation dependency.mockitoAndroid
     androidTestImplementation dependency.mockitoKotlin
+    androidTestImplementation 'com.linkedin.testbutler:test-butler-library:2.0.0'
     androidTestImplementation (dependency.testRunner) {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
