@@ -139,7 +139,7 @@
                     android:layout_width="45dp"
                     android:layout_height="25dp"
                     android:src="@drawable/ic_baseline_filter_list_24px"
-                    android:background="@drawable/oval_background_white"
+                    android:background="@drawable/rounded_rect_background_white"
                     android:layout_marginBottom="8dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -161,8 +161,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clipToPadding="false"
-                android:paddingBottom="8dp"
-                android:paddingTop="8dp"
                 android:scrollbars="vertical"/>
 
         </android.support.v4.widget.SwipeRefreshLayout>
