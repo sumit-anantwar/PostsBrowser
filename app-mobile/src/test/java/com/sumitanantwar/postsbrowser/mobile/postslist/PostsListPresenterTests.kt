@@ -2,6 +2,7 @@ package com.sumitanantwar.postsbrowser.mobile.postslist
 
 import com.nhaarman.mockitokotlin2.*
 import com.sumitanantwar.postsbrowser.data.PostsRepositoryImpl
+import com.sumitanantwar.postsbrowser.data.model.Post
 import com.sumitanantwar.postsbrowser.data.store.DataStoreFactory
 import com.sumitanantwar.postsbrowser.data.store.NetworkDataStore
 import com.sumitanantwar.postsbrowser.data.store.PostsDataStore
@@ -15,6 +16,7 @@ import com.sumitanantwar.postsbrowser.mobile.ui.activities.postslist.PostsListCo
 import com.sumitanantwar.postsbrowser.mobile.ui.activities.postslist.PostsListPresenter
 import com.sumitanantwar.postsbrowser.network.NetworkDataStoreImpl
 import com.sumitanantwar.postsbrowser.network.mapper.PostsModelMapper
+import com.sumitanantwar.postsbrowser.network.model.PostModel
 import com.sumitanantwar.postsbrowser.network.service.NetworkService
 import io.reactivex.Flowable
 import io.reactivex.Scheduler
@@ -34,8 +36,6 @@ class PostsListPresenterTests {
     private val testDataFactory = TestDataFactory()
 
     private lateinit var mockView: PostsListContract.View
-
-    private lateinit var mockNetworkService: NetworkService
     private lateinit var postsRepository: PostsRepository
     private lateinit var dataStoreFactory: DataStoreFactory
     private lateinit var networkDataStore: NetworkDataStore
@@ -63,12 +63,11 @@ class PostsListPresenterTests {
     @Test
     fun test_FetchPosts_Returns_ListOfPosts() {
 
-        //=== Mock ===
-        mockNetworkService = mock {
-            on { fetchPosts() } doReturn Flowable.just(testDataFactory.getPostModelList())
-        }
 
-        prepareProperties()
+        //=== Mock ===
+        val mockNetworkService = NetworkService_TD()
+
+        prepareProperties(mockNetworkService)
 
         //=== GIVEN THAT ===
         PostsListPresenter_SUT = PostsListPresenter(postsRepository, schedulerProvider, mockView)
@@ -77,7 +76,8 @@ class PostsListPresenterTests {
         PostsListPresenter_SUT.fetchPostsWithFilter("", "", "")
 
         //=== THEN ===
-        verify(mockNetworkService, times(1)).fetchPosts()
+        assertThat(mockNetworkService.fetchPostCount, _is(1))
+
         verify(mockView, times(1)).onFetchPosts(check {
             assertThat(it.count(), _is(10))
             assertThat(it.first().id, _is(1))
@@ -89,31 +89,57 @@ class PostsListPresenterTests {
     @Test
     fun test_FetchPostsFilteredByUserId_Returns_FilteredListOfPosts() {
 
-        testFilteredPostFetch(2)
+        testFilteredPostFetch("2")
 
     }
 
     @Test
     fun test_FetchPostsFilteredByUserIdAndTitle_Returns_FilteredListOfPosts() {
 
-        testFilteredPostFetch(3, "est")
+        testFilteredPostFetch("3", "est")
 
     }
 
     @Test
     fun test_FetchPostsFilteredByUserIdAndBody_Returns_FilteredListOfPosts() {
 
-        testFilteredPostFetch(4, body = "sed")
+        testFilteredPostFetch("4", body = "sed")
 
     }
 
-    private fun testFilteredPostFetch(userId: Int, title: String = "", body: String = "") {
-        //=== Mock ===
-        mockNetworkService = mock {
-            on { fetchPostsWithFilter(any()) } doReturn Flowable.just(testDataFactory.getFilteredPostModelList(userId))
+    @Test
+    fun test_FetchPostsFilteredByBody_Returns_FilteredListOfPosts() {
+
+        testFilteredPostFetch( body = "sed")
+
+    }
+
+    @Test
+    fun test_FetchPostsFilteredByTitle_Returns_FilteredListOfPosts() {
+
+        testFilteredPostFetch( title = "est")
+
+    }
+
+    private fun testFilteredPostFetch(userId: String = "", title: String = "", body: String = "") {
+
+        // Internal function to assert valid post
+        fun Post.assertValid() {
+            val uid = userId.toIntOrNull()
+            if (uid != null) {
+                assertThat(this.userId, _is(uid))
+            }
+
+            assertThat(this.title, containsString(title))
+            assertThat(this.body, containsString(body))
         }
 
-        prepareProperties()
+
+        //=== Mock ===
+        val mockNetworkService = NetworkService_TD()
+
+        prepareProperties(mockNetworkService)
+
 
         //=== GIVEN THAT ===
         PostsListPresenter_SUT = PostsListPresenter(postsRepository, schedulerProvider, mockView)
@@ -122,39 +148,52 @@ class PostsListPresenterTests {
         PostsListPresenter_SUT.fetchPostsWithFilter(userId.toString(), title, body)
 
         //=== THEN ===
-        verify(mockNetworkService, times(1)).fetchPostsWithFilter(any())
+        if (userId.toIntOrNull() != null) {
+            assertThat(mockNetworkService.fetchPostWithFilterCount, _is(1))
+        } else {
+            assertThat(mockNetworkService.fetchPostCount, _is(1))
+        }
+
         verify(mockView, times(1)).onFetchPosts(check {
 
-            with(it.first()) {
-                assertThat(this.userId, _is(userId))
-                assertThat(this.title, containsString(title))
-                assertThat(this.body, containsString(body))
-            }
+            it.first().assertValid()
 
-            with(it.random()) {
-                assertThat(this.userId, _is(userId))
-                assertThat(this.title, containsString(title))
-                assertThat(this.body, containsString(body))
-            }
+            it.random().assertValid()
 
-            with(it.last()) {
-                assertThat(this.userId, _is(userId))
-                assertThat(this.title, containsString(title))
-                assertThat(this.body, containsString(body))
-            }
+            it.last().assertValid()
         })
     }
 
 
     //======= Private Helpers =======
-    private fun prepareProperties() {
+    private fun prepareProperties(networkService: NetworkService) {
 
-        networkDataStore = NetworkDataStoreImpl(mockNetworkService, PostsModelMapper())
+        networkDataStore = NetworkDataStoreImpl(networkService, PostsModelMapper())
         postDataStore = PostsDataStoreImpl()
 
         dataStoreFactory = DataStoreFactory(postDataStore, networkDataStore)
 
         postsRepository = PostsRepositoryImpl(dataStoreFactory)
 
+    }
+}
+
+
+/** Network Service TestDouble */
+class NetworkService_TD : NetworkService {
+    // Test Data
+    private val testDataFactory = TestDataFactory()
+
+    var fetchPostCount = 0
+    var fetchPostWithFilterCount = 0
+
+    override fun fetchPosts(): Flowable<List<PostModel>> {
+        fetchPostCount++
+        return Flowable.just(testDataFactory.getPostModelList())
+    }
+
+    override fun fetchPostsWithFilter(userId: Int): Flowable<List<PostModel>> {
+        fetchPostWithFilterCount++
+        return Flowable.just(testDataFactory.getFilteredPostModelList(userId))
     }
 }

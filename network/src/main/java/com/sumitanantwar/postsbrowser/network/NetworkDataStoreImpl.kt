@@ -23,18 +23,32 @@ class NetworkDataStoreImpl @Inject constructor(
     }
 
     override fun fetchPostsWithFilter(userId: String, title: String, body: String): Flowable<List<Post>> {
-        val uid = userId.toIntOrNull()
-        if (uid == null) {
-            return fetchAllPosts()
+
+        // Internal function to apply filter
+        fun Flowable<List<Post>>.applyFilter() : Flowable<List<Post>> {
+            return this.map {
+                it.filter {
+                    it.title.contains(title) &&
+                            it.body.contains(body)
+                }
+            }
         }
 
-        return networkService.fetchPostsWithFilter(uid)
+        val uid = userId.toIntOrNull()
+        if (uid == null) {
+            return fetchAllPosts().applyFilter()
+        } else {
+            return fetchPostsWithUserId(uid).applyFilter()
+        }
+
+
+    }
+
+    private fun fetchPostsWithUserId(userId: Int) : Flowable<List<Post>> {
+        return networkService.fetchPostsWithFilter(userId)
             .map {
                 it.map {
                     postModelMapper.mapFromModel(it)
-                }.filter {
-                    it.title.contains(title) &&
-                            it.body.contains(body)
                 }
             }
     }
