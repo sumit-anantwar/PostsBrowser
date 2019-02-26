@@ -6,6 +6,7 @@ import com.sumitanantwar.postsbrowser.network.NetworkDataStoreImpl
 import com.sumitanantwar.postsbrowser.network.mapper.PostsModelMapper
 import com.sumitanantwar.postsbrowser.network.model.PostModel
 import com.sumitanantwar.postsbrowser.network.service.NetworkService
+import com.sumitanantwar.postsbrowser.network.testdata.MockNetworkService
 import com.sumitanantwar.postsbrowser.network.testdata.TestDataFactory
 import io.reactivex.Flowable
 import org.hamcrest.MatcherAssert.assertThat
@@ -36,7 +37,7 @@ class NetworkDataStoreImplTests {
     fun test_FetchPosts_Returns_ListOfPosts() {
 
         // Mocks
-        val mockNetworkService = NetworkService_TD()
+        val mockNetworkService = MockNetworkService()
 
         //=== GIVEN THAT ===
         NetworkDataStoreImpl_SUT = NetworkDataStoreImpl(mockNetworkService, PostsModelMapper())
@@ -53,13 +54,13 @@ class NetworkDataStoreImplTests {
         postsFlowable.test()
             .assertSubscribed()
             .assertValue {
-                it.count() == 10
+                it.count() == 100
             }
             .assertValue {
                 it.first().id == 1
             }
             .assertValue {
-                it.last().id == 10
+                it.last().id == 100
             }
             .assertComplete()
             .assertNoErrors()
@@ -91,7 +92,7 @@ class NetworkDataStoreImplTests {
 
 
         // Mocks
-        val mockNetworkService = NetworkService_TD()
+        val mockNetworkService = MockNetworkService()
 
         //=== GIVEN THAT ===
         NetworkDataStoreImpl_SUT = NetworkDataStoreImpl(mockNetworkService, PostsModelMapper())
@@ -126,23 +127,4 @@ class NetworkDataStoreImplTests {
     }
 
 
-}
-
-/** Network Service TestDouble */
-class NetworkService_TD : NetworkService {
-    // Test Data
-    private val testDataFactory = TestDataFactory()
-
-    var fetchPostCount = 0
-    var fetchPostWithFilterCount = 0
-
-    override fun fetchPosts(): Flowable<List<PostModel>> {
-        fetchPostCount++
-        return Flowable.just(testDataFactory.getPostModelList())
-    }
-
-    override fun fetchPostsWithFilter(userId: Int): Flowable<List<PostModel>> {
-        fetchPostWithFilterCount++
-        return Flowable.just(testDataFactory.getFilteredPostModelList(userId))
-    }
 }

@@ -79,9 +79,9 @@ class PostsListPresenterTests {
         assertThat(mockNetworkService.fetchPostCount, _is(1))
 
         verify(mockView, times(1)).onFetchPosts(check {
-            assertThat(it.count(), _is(10))
+            assertThat(it.count(), _is(100))
             assertThat(it.first().id, _is(1))
-            assertThat(it.last().id, _is(10))
+            assertThat(it.last().id, _is(100))
         })
 
     }
