@@ -27,6 +27,7 @@ open class BaseRobot<A: Activity>(val activityTestRule: ActivityTestRule<A>) {
     /** Launch the [Activity] as defined by the [ActivityTestRule]*/
     fun launchActivity(startIntent: Intent? = null) {
         activityTestRule.launchActivity(startIntent)
+        Thread.sleep(300)
     }
 
     fun editText_Replace(resId: Int, text: String): ViewInteraction =

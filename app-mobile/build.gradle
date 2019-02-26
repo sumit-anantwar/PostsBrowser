@@ -105,6 +105,9 @@ dependencies {
     testImplementation dependency.junit
     testImplementation dependency.mockitoKotlin
 
+    testImplementation project(path: ':network', configuration: 'testClasses')
+    androidTestImplementation project(path: ':network', configuration: 'testClasses')
+
     androidTestImplementation dependency.junit
     androidTestImplementation dependency.mockitoAndroid
     androidTestImplementation dependency.mockitoKotlin

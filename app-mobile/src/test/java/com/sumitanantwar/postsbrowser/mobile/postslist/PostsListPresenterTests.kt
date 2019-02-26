@@ -1,27 +1,27 @@
 package com.sumitanantwar.postsbrowser.mobile.postslist
 
-import com.nhaarman.mockitokotlin2.*
+import com.nhaarman.mockitokotlin2.check
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
 import com.sumitanantwar.postsbrowser.data.PostsRepositoryImpl
 import com.sumitanantwar.postsbrowser.data.model.Post
+import com.sumitanantwar.postsbrowser.data.repository.PostsRepository
 import com.sumitanantwar.postsbrowser.data.store.DataStoreFactory
 import com.sumitanantwar.postsbrowser.data.store.NetworkDataStore
 import com.sumitanantwar.postsbrowser.data.store.PostsDataStore
-import com.sumitanantwar.postsbrowser.data.repository.PostsRepository
-import com.sumitanantwar.postsbrowser.data.scheduler.SchedulerProvider
 import com.sumitanantwar.postsbrowser.datastore.PostsDataStoreImpl
 import com.sumitanantwar.postsbrowser.mobile.scheduler.ImmediateSchedulerProvider
-import com.sumitanantwar.postsbrowser.mobile.scheduler.RegularSchedulerProvider
-import com.sumitanantwar.postsbrowser.mobile.testdata.TestDataFactory
 import com.sumitanantwar.postsbrowser.mobile.ui.activities.postslist.PostsListContract
 import com.sumitanantwar.postsbrowser.mobile.ui.activities.postslist.PostsListPresenter
 import com.sumitanantwar.postsbrowser.network.NetworkDataStoreImpl
 import com.sumitanantwar.postsbrowser.network.mapper.PostsModelMapper
 import com.sumitanantwar.postsbrowser.network.model.PostModel
 import com.sumitanantwar.postsbrowser.network.service.NetworkService
+import com.sumitanantwar.postsbrowser.network.testdata.MockNetworkService
+import com.sumitanantwar.postsbrowser.network.testdata.TestDataFactory
+
 import io.reactivex.Flowable
-import io.reactivex.Scheduler
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.After
@@ -65,7 +65,7 @@ class PostsListPresenterTests {
 
 
         //=== Mock ===
-        val mockNetworkService = NetworkService_TD()
+        val mockNetworkService = MockNetworkService()
 
         prepareProperties(mockNetworkService)
 
@@ -110,14 +110,14 @@ class PostsListPresenterTests {
     @Test
     fun test_FetchPostsFilteredByBody_Returns_FilteredListOfPosts() {
 
-        testFilteredPostFetch( body = "sed")
+        testFilteredPostFetch(body = "sed")
 
     }
 
     @Test
     fun test_FetchPostsFilteredByTitle_Returns_FilteredListOfPosts() {
 
-        testFilteredPostFetch( title = "est")
+        testFilteredPostFetch(title = "est")
 
     }
 
@@ -136,7 +136,7 @@ class PostsListPresenterTests {
 
 
         //=== Mock ===
-        val mockNetworkService = NetworkService_TD()
+        val mockNetworkService = MockNetworkService()
 
         prepareProperties(mockNetworkService)
 
@@ -179,21 +179,3 @@ class PostsListPresenterTests {
 }
 
 
-/** Network Service TestDouble */
-class NetworkService_TD : NetworkService {
-    // Test Data
-    private val testDataFactory = TestDataFactory()
-
-    var fetchPostCount = 0
-    var fetchPostWithFilterCount = 0
-
-    override fun fetchPosts(): Flowable<List<PostModel>> {
-        fetchPostCount++
-        return Flowable.just(testDataFactory.getPostModelList())
-    }
-
-    override fun fetchPostsWithFilter(userId: Int): Flowable<List<PostModel>> {
-        fetchPostWithFilterCount++
-        return Flowable.just(testDataFactory.getFilteredPostModelList(userId))
-    }
-}
