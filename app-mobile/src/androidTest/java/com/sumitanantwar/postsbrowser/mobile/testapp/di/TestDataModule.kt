@@ -1,8 +1,10 @@
 package com.sumitanantwar.postsbrowser.mobile.testapp.di
 
 import com.nhaarman.mockitokotlin2.mock
+import com.sumitanantwar.postsbrowser.data.PostsRepositoryImpl
 import com.sumitanantwar.postsbrowser.data.scheduler.SchedulerProvider
 import com.sumitanantwar.postsbrowser.data.repository.PostsRepository
+import com.sumitanantwar.postsbrowser.data.store.DataStoreFactory
 import com.sumitanantwar.postsbrowser.mobile.scheduler.ImmediateSchedulerProvider
 import com.sumitanantwar.postsbrowser.mobile.scheduler.RegularSchedulerProvider
 import dagger.Module
@@ -21,8 +23,8 @@ object TestDataModule {
     @Provides
     @JvmStatic
     @Singleton
-    fun providesPostsRepository() : PostsRepository {
-        return mock()
+    fun providesPostsRepository(dataStoreFactory: DataStoreFactory) : PostsRepository {
+        return PostsRepositoryImpl(dataStoreFactory)
     }
 
 }

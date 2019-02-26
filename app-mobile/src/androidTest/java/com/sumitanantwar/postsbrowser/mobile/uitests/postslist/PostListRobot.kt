@@ -60,11 +60,23 @@ class PostListBrowserRobot(activityTestRule: ActivityTestRule<MainActivity>) : B
         )
     }
 
-    fun checkRecyclerViewAtPositionHasUserId(position: Int, userId: Int) {
-        checkRecyclerViewAtPositionMatchesFilter(position, userId)
+    fun typeInUserIdFilter(filter: String) {
+        editText_Type(R.id.edit_text_userid, filter)
     }
 
-    fun checkRecyclerViewAtPositionMatchesFilter(position: Int, userIdFilter: Int, titleFilter: String = "") {
+    fun clearUserIdFilter() {
+        editText_Replace(R.id.edit_text_userid, "")
+    }
+
+    fun typeInTitleFilter(filter: String) {
+        editText_Type(R.id.edit_text_title, filter)
+    }
+
+    fun clearTitleFilter() {
+        editText_Replace(R.id.edit_text_title, "")
+    }
+
+    fun checkRecyclerViewAtPositionHasUserId(position: Int, userIdFilter: Int) {
         scrollRecyclerViewToPosition(position)
 
         onView(
@@ -74,7 +86,13 @@ class PostListBrowserRobot(activityTestRule: ActivityTestRule<MainActivity>) : B
         )
     }
 
-    fun typeUserIdFilter(filter: String) {
-        editText_Type(R.id.edit_text_userid, filter)
+    fun checkRecyclerViewAtPositionContainsStringInTitle(position: Int, titleFilter: String) {
+        scrollRecyclerViewToPosition(position)
+
+        onView(
+            withId(R.id.recycler_posts)
+        ).check(
+            matches(hasItemAtPosition(position, withSubstring(titleFilter.toString()), R.id.text_post_title))
+        )
     }
 }
