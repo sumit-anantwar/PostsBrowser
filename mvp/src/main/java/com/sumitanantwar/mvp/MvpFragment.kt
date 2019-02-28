@@ -43,10 +43,11 @@ abstract class MvpFragment<V:MvpViewInterface, P:MvpPresenterInterface<V>> : Bas
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         // ButterKnife Unbinder
         unbinder.unbind()
         // Destroy the Presenter
         presenter.destroy()
+
+        super.onDestroy()
     }
 }

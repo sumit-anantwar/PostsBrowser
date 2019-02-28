@@ -14,9 +14,10 @@ abstract class MvpActivity<V:MvpViewInterface, P:MvpPresenterInterface<V>> : Bas
 
 
     override fun onDestroy() {
-        super.onDestroy()
 
         // Destroy the Presenter
         presenter.destroy()
+
+        super.onDestroy()
     }
 }

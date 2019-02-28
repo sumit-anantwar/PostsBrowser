@@ -36,10 +36,11 @@ abstract class MvpController<V:MvpViewInterface, P:MvpPresenterInterface<V>> : B
     }
 
     override fun onDestroyView(view: View) {
-        super.onDestroyView(view)
         // ButterKnife Unbinder
         unbinder.unbind()
         // Destroy the Presenter
         presenter.destroy()
+
+        super.onDestroyView(view)
     }
 }
